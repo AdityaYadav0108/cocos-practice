@@ -1,66 +1,22 @@
-import {
-  _decorator,
-  Animation,
-  CCInteger,
-  Component,
-  EventKeyboard,
-  EventMouse,
-  input,
-  Input,
-  KeyCode,
-  Node,
-  UITransform,
-} from "cc";
+import { _decorator, AudioClip, AudioSource, Component } from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("Orc")
 export class Orc extends Component {
   @property({
-    type: CCInteger,
-    step: 5,
-    max: 100,
-    min: 0,
-    slide: true,
+    type: AudioClip
   })
-  speed: number = 0;
+  private hit = null;
 
-  isWalking: boolean = false;
-  protected onLoad(): void {
-    this.node.on(Input.EventType.MOUSE_DOWN, (event: EventMouse) => {
-      this.speed += 5;
-      console.log(event.currentTarget.name);
-    });
+  audioSource: AudioSource = new AudioSource();
 
-    input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
-    input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
-  }
+  onLoad() {}
   start() {}
 
-  update(deltaTime: number) {
-    if (this.isWalking) {
-      this.node.setPosition(
-        this.node.getPosition().x + this.speed * deltaTime,
-        this.node.position.y
-      );
-      this.getComponent(Animation).crossFade("walking");
-    } else {
-      this.getComponent(Animation).stop();
-    }
-  }
+  update(deltaTime: number) {}
 
-  onKeyDown(event: EventKeyboard): void {
-    switch (event.keyCode) {
-      case KeyCode.ARROW_RIGHT:
-        this.isWalking = true;
-        break;
-    }
+  onHit(){
+    this.audioSource.playOneShot(this.hit);
   }
-
-  onKeyUp(event: EventKeyboard): void {
-    switch (event.keyCode) {
-      case KeyCode.ARROW_RIGHT:
-        this.isWalking = false;
-        break;
-    }
-  }
+  
 }
